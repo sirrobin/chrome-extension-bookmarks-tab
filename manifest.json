@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark to Existing Tab",
+  "version": "1.0.0",
+  "description": "When you open a bookmark, switch to an existing tab with the same URL instead of opening a duplicate.",
+  "permissions": ["tabs", "webNavigation"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
