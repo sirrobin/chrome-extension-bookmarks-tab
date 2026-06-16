@@ -19,6 +19,13 @@
 // Set to true to treat URLs that differ only by #hash as the same page.
 const IGNORE_HASH = false;
 
+// When we switch to an existing tab, reload it so you don't see a stale page.
+const REFRESH_ON_SWITCH = true;
+
+// Reload ignoring the browser cache (hard refresh / cache-busting). Set to
+// false to do a normal reload that may serve cached resources.
+const BYPASS_CACHE = true;
+
 // --- Track tabs that were freshly created --------------------------------
 // Lets us tell "bookmark opened a new tab" (close it) from "bookmark replaced
 // the current tab" (go back). This Set lives in the service worker's memory,
@@ -73,6 +80,11 @@ chrome.webNavigation.onCommitted.addListener(async (details) => {
     await chrome.windows.update(existing.windowId, { focused: true });
   } catch (e) {
     return;
+  }
+
+  // Reload it so you don't see a stale page from when it was last loaded.
+  if (REFRESH_ON_SWITCH) {
+    chrome.tabs.reload(existing.id, { bypassCache: BYPASS_CACHE }).catch(() => {});
   }
 
   // Clean up the tab the bookmark just opened.

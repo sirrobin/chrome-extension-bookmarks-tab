@@ -13,7 +13,8 @@ scripts, and only wakes up when you actually click a bookmark (Chrome's
 - Listens to `chrome.webNavigation.onCommitted` and reacts **only** to
   navigations tagged `auto_bookmark` (i.e. bookmark clicks).
 - Looks for another open tab whose URL matches exactly.
-- If found: activates that tab + focuses its window, then either closes the
+- If found: activates that tab + focuses its window, **reloads it** (hard
+  refresh by default, so you don't see a stale page), then either closes the
   newly-opened bookmark tab or goes back (so you land where you were).
 
 ## Install (unpacked)
@@ -38,6 +39,18 @@ treated as a different page.
 
 To treat URLs that differ only by `#hash` as the same page, set
 `IGNORE_HASH = true` at the top of `background.js` and reload the extension.
+
+## Refresh behavior
+
+When it switches to an existing tab it reloads that tab, so you never land on a
+stale page. This is controlled by two flags at the top of `background.js`:
+
+- `REFRESH_ON_SWITCH` (default `true`) — reload the tab on switch. Set to
+  `false` to switch without reloading.
+- `BYPASS_CACHE` (default `true`) — hard refresh that ignores the browser cache
+  (cache-busting). Set to `false` for a normal reload.
+
+Reload the extension after changing these.
 
 ## Permissions
 
